@@ -1,0 +1,4 @@
+[submodule "Content/SharedAssets"]
+	path = Content/SharedAssets
+	url = https://github.com/DarknessFX/UEMaterials.git
+	ignore = dirty
