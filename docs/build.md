@@ -56,3 +56,13 @@ git clone https://github.com/Tolaynjch86/OPD_Lab4_UnrealEngine.git
 ```
 
 После клонирования открыть StackOBot.uproject. Первый запуск долгий, движок компилирует шейдеры.
+
+**Хуки**
+
+После клонирования один раз выполнить в корне репозитория:
+
+```
+powershell -ExecutionPolicy Bypass -File setup.ps1
+```
+
+Скрипт подключает хук pre-commit из папки .githooks. Хук не даёт закоммитить файлы из Saved, Intermediate, Binaries, DerivedDataCache и .vs, а также файлы больше 50 МБ, которые не идут через LFS. Проверить, что хук подключён: команда git config --get core.hooksPath должна вывести .githooks.
