@@ -1,0 +1,32 @@
+#!/bin/sh
+# Хук pre-commit: проверяет файлы перед каждым коммитом.
+# exit 1 - отменить коммит. Дошли до конца без ошибок - коммит разрешён.
+
+# Если на компьютере есть Python (команда py), проверку делает check.py
+if py --version > /dev/null 2>&1; then
+    git diff --cached --name-only --diff-filter=ACMR | git check-attr filter --stdin > .git/staged.txt
+    py .githooks/check.py
+    exit $?
+fi
+
+# Python нет: проверяем сами
+
+# Список файлов, которые идут в коммит
+FILES=$(git diff --cached --name-only --diff-filter=ACMR)
+
+# Проверка 1: служебные папки Unreal Engine
+if echo "$FILES" | grep -e "^Saved/" -e "^Intermediate/" -e "^Binaries/" -e "^DerivedDataCache/" -e "^.vs/"; then
+    echo "ОШИБКА: файлы выше лежат в служебных папках Unreal, их нельзя коммитить"
+    exit 1
+fi
+
+# Проверка 2: файлы больше 50 МБ, которые не идут через LFS
+echo "$FILES" | while read FILE
+do
+    if [ -f "$FILE" ] && [ $(wc -c < "$FILE") -gt 52428800 ]; then
+        if git check-attr filter -- "$FILE" | grep -q "unspecified"; then
+            echo "ОШИБКА: $FILE больше 50 МБ и не идёт через LFS"
+            exit 1
+        fi
+    fi
+done
