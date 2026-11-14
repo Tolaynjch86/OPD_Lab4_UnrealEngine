@@ -79,3 +79,9 @@ Builds/
 
 # Tutorial source archive, not used by the engine (283 MB)
 Content/FirstGameInUE5_Source.zip
+
+# Git LFS hooks, created by setup.ps1 (git lfs install)
+.githooks/post-checkout
+.githooks/post-commit
+.githooks/post-merge
+.githooks/pre-push

@@ -3,4 +3,5 @@
 
 git config core.hooksPath .githooks
 git config core.quotePath false
+git lfs install
 Write-Host "core.hooksPath =" (git config --get core.hooksPath)
